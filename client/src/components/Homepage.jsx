@@ -2,7 +2,7 @@ import Header from "./Header";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { SignIn } from "./SignIn";
-import { Dashboard } from "./Dashboard";
+import Dashboard from "./Dashboard";
 
 export default class HomePage extends Component {
   static propTypes = {
@@ -11,7 +11,9 @@ export default class HomePage extends Component {
       profileImageUrl: PropTypes.string,
       twitterId: PropTypes.string,
       screenName: PropTypes.string,
-      _id: PropTypes.string
+      _id: PropTypes.string,
+      token : PropTypes.string,
+      tokenSecret : PropTypes.string
     })
   };
 
@@ -37,6 +39,7 @@ export default class HomePage extends Component {
         throw new Error("failed to authenticate user");
       })
       .then(responseJson => {
+        console.log("response to req  ",responseJson)
         this.setState({
           authenticated: true,
           user: responseJson.user

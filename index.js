@@ -6,6 +6,7 @@ const passport = require("passport");
 const passportSetup = require("./config/passport-setup");
 const session = require("express-session");
 const authRoutes = require("./routes/auth-routes");
+const indexRouter = require("./routes/");
 const mongoose = require("mongoose");
 const keys = require("./config/keys");
 const cors = require("cors");
@@ -15,7 +16,9 @@ const cookieParser = require("cookie-parser"); // parse cookie header
 mongoose.connect(keys.MONGODB_URI, () => {
   console.log("connected to mongo db");
 });
-
+app.use(express.json())
+// parse cookies
+app.use(cookieParser());
 app.use(
   cookieSession({
     name: "session",
@@ -23,10 +26,6 @@ app.use(
     maxAge: 24 * 60 * 60 * 100
   })
 );
-
-// parse cookies
-app.use(cookieParser());
-
 // initalize passport
 app.use(passport.initialize());
 // deserialize cookie from the browser
@@ -43,6 +42,7 @@ app.use(
 
 // set up routes
 app.use("/auth", authRoutes);
+app.use('/', indexRouter);
 
 const authCheck = (req, res, next) => {
   if (!req.user) {

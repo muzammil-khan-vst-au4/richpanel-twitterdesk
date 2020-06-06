@@ -26,7 +26,8 @@ yarn-debug.log*
 yarn-error.log*
 
 # server 
-/server/config/keys.js
+config/keys.js
 /server/node_modules
 /client/build/
 node_modules
+.env

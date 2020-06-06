@@ -6,18 +6,14 @@ const User = require("../models/user-model");
 // serialize the user.id to save in the cookie session
 // so the browser will remember the user when login
 passport.serializeUser((user, done) => {
-  done(null, user.id);
+  done(null, user);
 });
 
 // deserialize the cookieUserId to user in the database
-passport.deserializeUser((id, done) => {
-  User.findById(id)
-    .then(user => {
+passport.deserializeUser((user, done) => {
+ // console.log(user)
       done(null, user);
-    })
-    .catch(e => {
-      done(new Error("Failed to deserialize an user"));
-    });
+
 });
 
 passport.use(
@@ -29,6 +25,7 @@ passport.use(
     },
     async (token, tokenSecret, profile, done) => {
       // find current user in UserModel
+      //console.log(token, tokenSecret)
       const currentUser = await User.findOne({
         twitterId: profile._json.id_str
       });
@@ -41,10 +38,10 @@ passport.use(
           profileImageUrl: profile._json.profile_image_url
         }).save();
         if (newUser) {
-          done(null, newUser);
+          done(null, {newUser, token, tokenSecret});
         }
       }
-      done(null, currentUser);
+      done(null, {currentUser, token, tokenSecret});
     }
   )
 );
